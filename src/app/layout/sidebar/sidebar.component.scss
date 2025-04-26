@@ -1,0 +1,22 @@
+nav {
+  padding: 1rem;
+
+  ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      background: #444;
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      color: #ddd;
+
+      &.active {
+        background: #00b0ff;
+        color: white;
+      }
+    }
+  }
+}

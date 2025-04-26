@@ -1,0 +1,14 @@
+.projects {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.project-card {
+  width: 200px;
+  height: 200px;
+  background: #ddd;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
