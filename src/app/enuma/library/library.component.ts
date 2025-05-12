@@ -1,14 +1,63 @@
-import {Component} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {Component, OnInit} from '@angular/core';
+import {NgForOf, AsyncPipe} from '@angular/common';
+import {Observable} from 'rxjs';
+import {EnumaClientService, ExecutionRequest} from '../../core/enuma-client.service';
+import * as yaml from 'js-yaml';
+import {ExecutionDialogComponent} from '../../features/execution-dialog/execution-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
+import {CreateExecutorDialogComponent} from '../../features/create-executor-dialog/create-executor-dialog.component';
 
 @Component({
   selector: 'app-library',
-  imports: [
-    NgForOf
-  ],
+  standalone: true,
+  imports: [NgForOf, AsyncPipe],
   templateUrl: './library.component.html',
-  styleUrl: './library.component.scss'
+  styleUrls: ['./library.component.scss']
 })
-export class LibraryComponent {
-  projects = ['EA project 1', 'EA project 2', 'EA project 3', 'EA project 4'];
+export class LibraryComponent implements OnInit {
+  executors$!: Observable<ExecutionRequest[]>;
+
+  constructor(
+    private enumaClient: EnumaClientService,
+    private dialog: MatDialog
+  ) {
+  }
+
+
+  ngOnInit(): void {
+    this.executors$ = this.enumaClient.getExecutionRequestList();
+  }
+
+  getFormattedExecutor(executor: Record<string, any>): string {
+    return yaml.dump(executor);
+  }
+
+  runExecutor(executorName: string): void {
+    const request = {name: executorName, executor: ''};
+
+    this.enumaClient.runEnumaScript(request).subscribe({
+      next: (activation) => {
+        console.log(`Execution started! ID: ${activation.executionId}`);
+
+        this.dialog.open(ExecutionDialogComponent, {
+          data: activation.executionId,
+          width: '600px'
+        });
+      },
+      error: (err) => {
+        console.error('Failed to start execution:', err);
+        window.alert('Failed to start execution. Please try again.');
+      }
+    });
+  }
+
+  openCreateExecutorDialog(): void {
+    const dialogRef = this.dialog.open(CreateExecutorDialogComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.executors$ = this.enumaClient.getExecutionRequestList();
+    });
+  }
 }

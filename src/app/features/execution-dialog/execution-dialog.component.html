@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Execution Details</h2>
+
+<div mat-dialog-content>
+  <p><strong>Execution ID:</strong> {{ executionId }}</p>
+
+  <div *ngIf="loading">Loading...</div>
+
+  <div *ngIf="error">{{ error }}</div>
+
+  <div *ngIf="executionResult">
+    <p><strong>Status:</strong> {{ executionResult.status }}</p>
+    <p><strong>Script Path:</strong> {{ executionResult.scriptPath }}</p>
+
+    <h3>Output Logs:</h3>
+    <pre>{{ executionResult.output.join('\n') }}</pre>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="refreshExecutionResult()">🔄 Refresh</button>
+  <button mat-button (click)="close()">Close</button>
+</div>

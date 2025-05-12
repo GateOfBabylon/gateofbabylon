@@ -1,4 +1,20 @@
-<h2>EA Library</h2>
+<h2 class="library-title">
+  EA Library
+  <button class="create-button" (click)="openCreateExecutorDialog()">➕ New Executor</button>
+</h2>
+
 <div class="projects">
-  <div class="project-card" *ngFor="let p of projects">{{ p }}</div>
+  <div class="project-card" *ngFor="let executor of executors$ | async">
+    <div class="executor-header">
+      <span>{{ executor.name }}</span>
+
+      <button class="run-button" (click)="runExecutor(executor.name)">
+        ▶️ Run
+      </button>
+    </div>
+
+    <pre class="executor-yaml">
+{{ getFormattedExecutor(executor.executor) }}
+    </pre>
+  </div>
 </div>
