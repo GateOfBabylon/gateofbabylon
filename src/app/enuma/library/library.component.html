@@ -8,9 +8,10 @@
     <div class="executor-header">
       <span>{{ executor.name }}</span>
 
-      <button class="run-button" (click)="runExecutor(executor.name)">
-        ▶️ Run
-      </button>
+      <div class="executor-actions">
+        <button class="run-button" (click)="runExecutor(executor.name)">Run</button>
+        <button class="delete-button" (click)="deleteExecutor(executor.id)">Delete</button>
+      </div>
     </div>
 
     <pre class="executor-yaml">

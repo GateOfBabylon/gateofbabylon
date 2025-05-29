@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForOf, AsyncPipe} from '@angular/common';
 import {Observable} from 'rxjs';
-import {EnumaClientService, ExecutionRequest} from '../../core/enuma-client.service';
+import {EnumaClientService, Execution} from '../../core/enuma-client.service';
 import * as yaml from 'js-yaml';
 import {ExecutionDialogComponent} from '../../features/execution-dialog/execution-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
@@ -15,7 +15,7 @@ import {CreateExecutorDialogComponent} from '../../features/create-executor-dial
   styleUrls: ['./library.component.scss']
 })
 export class LibraryComponent implements OnInit {
-  executors$!: Observable<ExecutionRequest[]>;
+  executors$!: Observable<Execution[]>;
 
   constructor(
     private enumaClient: EnumaClientService,
@@ -33,7 +33,7 @@ export class LibraryComponent implements OnInit {
   }
 
   runExecutor(executorName: string): void {
-    const request = {name: executorName, executor: ''};
+    const request = {name: executorName, executorValue: ''};
 
     this.enumaClient.runEnumaScript(request).subscribe({
       next: (activation) => {
@@ -53,11 +53,27 @@ export class LibraryComponent implements OnInit {
 
   openCreateExecutorDialog(): void {
     const dialogRef = this.dialog.open(CreateExecutorDialogComponent, {
-      width: '600px'
+      width: '6000px'
     });
 
     dialogRef.afterClosed().subscribe(() => {
       this.executors$ = this.enumaClient.getExecutionRequestList();
+    });
+  }
+
+  deleteExecutor(id: string): void {
+    const confirmed = confirm('Are you sure you want to delete this executor?');
+
+    if (!confirmed) return;
+
+    this.enumaClient.deleteExecutor(id).subscribe({
+      next: () => {
+        this.executors$ = this.enumaClient.getExecutionRequestList(); // refresh after delete
+      },
+      error: (err) => {
+        console.error('Failed to delete executor:', err);
+        alert('Failed to delete executor. Please try again.');
+      }
     });
   }
 }

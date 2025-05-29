@@ -1,14 +1,19 @@
 <h2 mat-dialog-title>Create New Executor</h2>
 
-<div mat-dialog-content>
-  <label>Name:</label>
-  <input [(ngModel)]="name" class="input" placeholder="Executor name"/>
+<div mat-dialog-content class="dialog-content">
+  <div class="form-group">
+    <label for="executorName">Name</label>
+    <input id="executorName" [(ngModel)]="name" class="input" placeholder="Executor name" />
+  </div>
 
-  <label class="yaml-label">Executor YAML:</label>
-  <textarea [(ngModel)]="executorYaml" class="yaml-textarea" placeholder="Write your YAML here..."></textarea>
+  <div class="form-group">
+    <label for="yamlInput">Executor YAML</label>
+    <textarea id="yamlInput" [(ngModel)]="executorYaml" class="yaml-textarea"
+              placeholder="Write your EA code here..."></textarea>
+  </div>
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-button (click)="createExecutor()">Create</button>
+  <button mat-button color="primary" (click)="createExecutor()">Create</button>
   <button mat-button (click)="dialogRef.close()">Cancel</button>
 </div>

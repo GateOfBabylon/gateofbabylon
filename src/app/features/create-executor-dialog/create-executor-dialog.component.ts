@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
-import {EnumaClientService, ExecutionRequestInput} from '../../core/enuma-client.service';
+import {EnumaClientService, ExecutionInput} from '../../core/enuma-client.service';
 import * as yaml from 'js-yaml';
 import {FormsModule} from '@angular/forms';
 
@@ -25,10 +25,11 @@ export class CreateExecutorDialogComponent {
   createExecutor(): void {
     try {
       const executor = yaml.load(this.executorYaml);
-      const request: ExecutionRequestInput = {
+      const request: ExecutionInput = {
         name: this.name,
-        executor: JSON.stringify(executor)
+        executorValue: JSON.stringify(executor)
       };
+      console.info("EXECUTOR: " + request.executorValue)
       this.enumaClient.saveEnumaScript(request).subscribe({
         next: () => {
           alert('Executor created successfully');

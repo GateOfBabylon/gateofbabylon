@@ -1,22 +1,31 @@
 <h2 mat-dialog-title>Execution Details</h2>
 
 <div mat-dialog-content>
-  <p><strong>Execution ID:</strong> {{ executionId }}</p>
+  <p><strong>ID:</strong> {{ executionId }}</p>
 
   <div *ngIf="loading">Loading...</div>
-
   <div *ngIf="error">{{ error }}</div>
 
-  <div *ngIf="executionResult">
-    <p><strong>Status:</strong> {{ executionResult.status }}</p>
-    <p><strong>Script Path:</strong> {{ executionResult.scriptPath }}</p>
+  <ng-container *ngIf="executionResult">
+    <p>
+      <strong>Status:</strong>
+      <span class="status-badge status-{{ executionResult.status.toLowerCase() }}">
+        {{ executionResult.status }}
+      </span>
+    </p>
+    <p><strong>Script:</strong> {{ executionResult.scriptPath }}</p>
 
-    <h3>Output Logs:</h3>
-    <pre>{{ executionResult.output.join('\n') }}</pre>
-  </div>
+    <h4>Output Logs</h4>
+    <pre *ngIf="executionResult.output.length > 0; else noLogs">
+      <ng-container *ngFor="let line of executionResult.output">
+{{ line }}
+      </ng-container>
+    </pre>
+    <ng-template #noLogs><i>No output logs available.</i></ng-template>
+  </ng-container>
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-button (click)="refreshExecutionResult()">🔄 Refresh</button>
+  <button mat-button color="primary" (click)="refreshExecutionResult()">Refresh</button>
   <button mat-button (click)="close()">Close</button>
 </div>

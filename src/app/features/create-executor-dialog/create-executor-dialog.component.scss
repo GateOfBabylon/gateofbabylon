@@ -1,19 +1,58 @@
-.input {
+.dialog-content {
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1rem 0;
   width: 100%;
-  padding: 0.5rem;
-  margin-bottom: 1rem;
+  box-sizing: border-box;
 }
 
-.yaml-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.input,
+.yaml-textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
 }
 
 .yaml-textarea {
-  width: 100%;
-  height: 200px;
+  height: 220px;
   font-family: monospace;
-  padding: 0.5rem;
-  border-radius: 6px;
+  resize: vertical;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+mat-dialog-actions {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+button[mat-button] {
+  padding: 0.45rem 1.4rem;
+  margin-bottom: 0.5rem;
+  margin-right: 1rem;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: none;
 }

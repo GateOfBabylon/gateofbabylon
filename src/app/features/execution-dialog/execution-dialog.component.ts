@@ -1,8 +1,8 @@
-import {Component, Inject} from '@angular/core';
-import {EnumaClientService, ExecutionResult} from '../../core/enuma-client.service';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatDialogModule} from '@angular/material/dialog';
+import {Component, Inject, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {interval, Subscription, switchMap, catchError, of} from 'rxjs';
+import {EnumaClientService, ExecutionResult} from '../../core/enuma-client.service';
 
 @Component({
   selector: 'app-execution-dialog',
@@ -11,23 +11,44 @@ import {CommonModule} from '@angular/common';
   templateUrl: './execution-dialog.component.html',
   styleUrls: ['./execution-dialog.component.scss']
 })
-export class ExecutionDialogComponent {
+export class ExecutionDialogComponent implements OnDestroy {
   executionResult?: ExecutionResult;
   loading = false;
   error = '';
+  private pollingSub?: Subscription;
 
   constructor(
     private enumaClient: EnumaClientService,
     private dialogRef: MatDialogRef<ExecutionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public executionId: string
   ) {
-    this.refreshExecutionResult();
+    this.startPolling();
+  }
+
+  private startPolling(): void {
+    this.loading = true;
+    this.pollingSub = interval(1000)
+      .pipe(
+        switchMap(() =>
+          this.enumaClient.getExecutionResult(this.executionId).pipe(
+            catchError(err => {
+              console.error('Failed to fetch execution result:', err);
+              this.error = 'Failed to fetch execution result';
+              return of(undefined);
+            })
+          )
+        )
+      )
+      .subscribe(result => {
+        this.loading = false;
+        if (result) {
+          this.executionResult = result;
+        }
+      });
   }
 
   refreshExecutionResult(): void {
     this.loading = true;
-    this.error = '';
-
     this.enumaClient.getExecutionResult(this.executionId).subscribe({
       next: (result) => {
         this.executionResult = result;
@@ -43,5 +64,9 @@ export class ExecutionDialogComponent {
 
   close(): void {
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    this.pollingSub?.unsubscribe();
   }
 }

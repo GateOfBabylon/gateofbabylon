@@ -1,1 +1,34 @@
-<p>executions works!</p>
+<h2 class="library-title">Execution Results</h2>
+
+<div class="filter-bar">
+  <label for="executorSelect">Select Executor:</label>
+  <select id="executorSelect" [(ngModel)]="selectedExecutorName" (change)="onExecutorChange()">
+    <option *ngFor="let executor of executorList" [value]="executor.name">
+      {{ executor.name }}
+    </option>
+  </select>
+</div>
+
+<div *ngIf="executionResults$ | async as results">
+  <div *ngIf="results.length > 0; else noResults">
+    <div class="result-card" *ngFor="let result of results" [ngClass]="'status-' + result.status.toLowerCase()">
+      <p><strong>Status:</strong> {{ result.status }}</p>
+      <p><strong>Script Path:</strong> {{ result.scriptPath }}</p>
+      <p><strong>Timestamp:</strong> {{ result.timestamp | date: 'medium' }}</p>
+
+      <button class="toggle-button" (click)="toggleOutput(result.id)">
+        {{ isExpanded(result.id) ? 'Hide Output' : 'Show Output' }}
+      </button>
+
+      <pre *ngIf="isExpanded(result.id)">
+<ng-container *ngFor="let line of result.output">
+{{ line }}
+</ng-container>
+      </pre>
+    </div>
+  </div>
+</div>
+
+<ng-template #noResults>
+  <p>No execution results found for this executor.</p>
+</ng-template>
