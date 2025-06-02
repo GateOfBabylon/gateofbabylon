@@ -19,7 +19,7 @@ export class ExecutionsComponent implements OnInit {
   constructor(private enumaClient: EnumaClientService) {}
 
   ngOnInit(): void {
-    this.enumaClient.getExecutionRequestList().subscribe((executors) => {
+    this.enumaClient.getExecutions().subscribe((executors) => {
       this.executorList = executors;
       if (executors.length > 0) {
         this.selectedExecutorName = executors[0].name;

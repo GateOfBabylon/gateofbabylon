@@ -25,7 +25,7 @@ export class LibraryComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.executors$ = this.enumaClient.getExecutionRequestList();
+    this.executors$ = this.enumaClient.getExecutions();
   }
 
   getFormattedExecutor(executor: Record<string, any>): string {
@@ -57,7 +57,7 @@ export class LibraryComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.executors$ = this.enumaClient.getExecutionRequestList();
+      this.executors$ = this.enumaClient.getExecutions();
     });
   }
 
@@ -68,7 +68,7 @@ export class LibraryComponent implements OnInit {
 
     this.enumaClient.deleteExecutor(id).subscribe({
       next: () => {
-        this.executors$ = this.enumaClient.getExecutionRequestList(); // refresh after delete
+        this.executors$ = this.enumaClient.getExecutions(); // refresh after delete
       },
       error: (err) => {
         console.error('Failed to delete executor:', err);

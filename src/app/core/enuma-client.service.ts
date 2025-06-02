@@ -42,7 +42,7 @@ export class EnumaClientService {
     return this.httpClient.post<Activation>(`${this.API_URL}/run`, request);
   }
 
-  getExecutionRequestList(): Observable<Execution[]> {
+  getExecutions(): Observable<Execution[]> {
     return this.httpClient.get<Execution[]>(`${this.API_URL}/executors`);
   }
 
